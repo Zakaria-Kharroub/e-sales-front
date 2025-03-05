@@ -1,8 +1,15 @@
+"use client"
+
+import { useState } from "react"
 import Card from "../../components/Card/Card"
 import Modal from "../../components/Modal/Modal"
+import { FaPlus, FaSearch, FaFilter } from "react-icons/fa"
 import "./Produit.css"
 
 const Produit = () => {
+    const [searchTerm, setSearchTerm] = useState("")
+    const [selectedCategory, setSelectedCategory] = useState("")
+
     // Données statiques pour les produits
     const produits = [
         {
@@ -11,6 +18,7 @@ const Produit = () => {
             description: "Smartphone dernière génération avec écran 6.5 pouces",
             prix: 699.99,
             categorie: "Électronique",
+            stock: 25,
         },
         {
             id: 2,
@@ -18,6 +26,7 @@ const Produit = () => {
             description: "Ordinateur portable puissant pour les professionnels",
             prix: 1299.99,
             categorie: "Électronique",
+            stock: 12,
         },
         {
             id: 3,
@@ -25,6 +34,7 @@ const Produit = () => {
             description: "T-shirt en coton de haute qualité",
             prix: 29.99,
             categorie: "Vêtements",
+            stock: 50,
         },
         {
             id: 4,
@@ -32,6 +42,7 @@ const Produit = () => {
             description: "Chaise ergonomique pour le bureau",
             prix: 199.99,
             categorie: "Maison",
+            stock: 8,
         },
         {
             id: 5,
@@ -39,6 +50,7 @@ const Produit = () => {
             description: "Café de spécialité en grains",
             prix: 12.99,
             categorie: "Alimentation",
+            stock: 30,
         },
         {
             id: 6,
@@ -46,6 +58,7 @@ const Produit = () => {
             description: "Écouteurs Bluetooth avec réduction de bruit",
             prix: 149.99,
             categorie: "Électronique",
+            stock: 0,
         },
     ]
 
@@ -57,25 +70,79 @@ const Produit = () => {
         { id: 4, nom: "Maison" },
     ]
 
+    // Filtrer les produits
+    const filteredProducts = produits.filter((produit) => {
+        const matchesSearch =
+            produit.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            produit.description.toLowerCase().includes(searchTerm.toLowerCase())
+        const matchesCategory = selectedCategory === "" || produit.categorie === selectedCategory
+
+        return matchesSearch && matchesCategory
+    })
+
     return (
         <div className="produit-page">
             <div className="page-header">
                 <h1 className="page-title">Gestion des Produits</h1>
                 <button className="action-button" data-bs-toggle="modal" data-bs-target="#addProduitModal">
-                    Ajouter un produit
+                    <FaPlus />
+                    <span>Ajouter un produit</span>
                 </button>
             </div>
 
-            <div className="product-grid">
-                {produits.map((produit) => (
-                    <Card
-                        key={produit.id}
-                        title={produit.nom}
-                        description={produit.description}
-                        price={produit.prix}
-                        category={produit.categorie}
+            <div className="filters-container">
+                <div className="search-container">
+                    <FaSearch className="search-icon" />
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Rechercher un produit..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                ))}
+                </div>
+
+                <div className="filter-container">
+                    <div className="filter-icon-container">
+                        <FaFilter className="filter-icon" />
+                    </div>
+                    <select
+                        className="filter-select"
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                    >
+                        <option value="">Toutes les catégories</option>
+                        {categories.map((categorie) => (
+                            <option key={categorie.id} value={categorie.nom}>
+                                {categorie.nom}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+
+            <div className="products-count">
+                {filteredProducts.length} produit{filteredProducts.length !== 1 ? "s" : ""} trouvé
+                {filteredProducts.length !== 1 ? "s" : ""}
+            </div>
+
+            <div className="product-grid">
+                {filteredProducts.length > 0 ? (
+                    filteredProducts.map((produit) => (
+                        <Card
+                            key={produit.id}
+                            title={produit.nom}
+                            description={produit.description}
+                            price={produit.prix}
+                            category={produit.categorie}
+                            stock={produit.stock}
+                        />
+                    ))
+                ) : (
+                    <div className="no-results">
+                        <p>Aucun produit ne correspond à votre recherche.</p>
+                    </div>
+                )}
             </div>
 
             <Modal id="addProduitModal" title="Ajouter un produit">
@@ -96,7 +163,16 @@ const Produit = () => {
                         <label htmlFor="produitPrix" className="form-label">
                             Prix
                         </label>
-                        <input type="number" step="0.01" className="form-control" id="produitPrix" />
+                        <div className="input-group">
+                            <input type="number" step="0.01" className="form-control" id="produitPrix" />
+                            <span className="input-group-text">€</span>
+                        </div>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="produitStock" className="form-label">
+                            Stock initial
+                        </label>
+                        <input type="number" className="form-control" id="produitStock" min="0" />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="produitCategorie" className="form-label">
@@ -112,7 +188,7 @@ const Produit = () => {
                         </select>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                        <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal">
                             Annuler
                         </button>
                         <button type="submit" className="btn btn-primary">
