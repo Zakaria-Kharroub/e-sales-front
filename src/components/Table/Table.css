@@ -1,4 +1,139 @@
+.table-container {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
 .data-table {
-    margin-top: 20px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.data-table th {
+    background: #f8fafc;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 0.75rem 1rem;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:hover td {
+    background-color: #f9fafb;
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.table-btn {
+    background-color: transparent;
+    border: none;
+    color: var(--gray-600);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.table-btn:hover {
+    background-color: var(--gray-200);
+    color: var(--gray-900);
+}
+
+.table-btn.edit:hover {
+    background-color: rgba(79, 70, 229, 0.1);
+    color: var(--primary);
+}
+
+.table-btn.delete:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.status-inactive {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.quantity-badge {
+    display: inline-block;
+    min-width: 2rem;
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.action-icon {
+    padding: 0.375rem;
+    border-radius: 6px;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-icon:hover {
+    background-color: #f3f4f6;
+    color: #4f46e5;
+}
+
+.sort-header {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sort-header:hover {
+    color: #4f46e5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .data-table {
+        min-width: 600px;
+    }
 }
 
